@@ -1,0 +1,1 @@
+{"rewrites":[{"source":"/","destination":"/seoringung-booking/index.html"},{"source":"/booking.html","destination":"/seoringung-booking/booking.html"},{"source":"/styles.css","destination":"/seoringung-booking/styles.css"},{"source":"/app.js","destination":"/seoringung-booking/app.js"},{"source":"/assets/:path*","destination":"/seoringung-booking/assets/:path*"}]}
