@@ -1,4 +1,5 @@
-const CALDAV_ROOT = 'https://caldav.calendar.naver.com/';
+// 네이버 CalDAV는 서버 최상위가 아닌 principals 컬렉션에서 탐색을 시작한다.
+const CALDAV_ROOT = 'https://caldav.calendar.naver.com/principals/';
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 function requireCalDavConfig() {
