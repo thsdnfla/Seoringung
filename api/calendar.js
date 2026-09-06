@@ -1,5 +1,5 @@
-// 네이버 CalDAV는 서버 최상위가 아닌 principals 컬렉션에서 탐색을 시작한다.
-const CALDAV_ROOT = 'https://caldav.calendar.naver.com/principals/';
+const CALDAV_ORIGIN = 'https://caldav.calendar.naver.com';
+const CALDAV_ROOT = `${CALDAV_ORIGIN}/`;
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 function requireCalDavConfig() {
@@ -16,11 +16,6 @@ function xml(value) {
 
 function decodeXml(value = '') {
   return value.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&').replace(/&#(x[\da-f]+|\d+);/gi, (_match, code) => String.fromCodePoint(code[0].toLowerCase() === 'x' ? Number.parseInt(code.slice(1), 16) : Number.parseInt(code, 10)));
-}
-
-function hrefsFrom(xmlText, property) {
-  const propertyPattern = new RegExp(`<(?:(?:[\\w-]+):)?${property}[^>]*>[\\s\\S]*?<(?:(?:[\\w-]+):)?href[^>]*>([\\s\\S]*?)<\\/(?:(?:[\\w-]+):)?href>[\\s\\S]*?<\\/(?:(?:[\\w-]+):)?${property}>`, 'gi');
-  return [...xmlText.matchAll(propertyPattern)].map((match) => decodeXml(match[1].trim()));
 }
 
 function responsesFrom(xmlText) {
@@ -53,16 +48,11 @@ async function caldavRequest(url, method, depth, body) {
 
 async function findCalendarUrls() {
   if (process.env.NAVER_CALDAV_CALENDAR_URL) return [process.env.NAVER_CALDAV_CALENDAR_URL];
-
-  const principalXml = await caldavRequest(CALDAV_ROOT, 'PROPFIND', 0, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:current-user-principal/></d:prop></d:propfind>');
-  const principal = hrefsFrom(principalXml, 'current-user-principal')[0];
-  if (!principal) throw new Error('네이버 캘린더 계정을 찾을 수 없습니다.');
-
-  const homeXml = await caldavRequest(toUrl(principal), 'PROPFIND', 0, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav"><d:prop><c:calendar-home-set/></d:prop></d:propfind>');
-  const home = hrefsFrom(homeXml, 'calendar-home-set')[0];
-  if (!home) throw new Error('네이버 캘린더 보관함을 찾을 수 없습니다.');
-
-  const calendarsXml = await caldavRequest(toUrl(home), 'PROPFIND', 1, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>');
+  // 네이버는 표준 current-user-principal 탐색에 400을 반환할 수 있다. 네이버 고유의
+  // 캘린더 보관함 경로를 직접 사용한다. (/caldav/{네이버아이디}/calendar/{캘린더ID}/)
+  const { NAVER_CALDAV_USERNAME } = requireCalDavConfig();
+  const homeUrl = `${CALDAV_ORIGIN}/caldav/${encodeURIComponent(NAVER_CALDAV_USERNAME)}/`;
+  const calendarsXml = await caldavRequest(homeUrl, 'PROPFIND', 1, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>');
   return responsesFrom(calendarsXml).filter((entry) => /<(?:[\w-]+:)?calendar\b/i.test(entry)).map((entry) => {
     const match = entry.match(/<(?:(?:[\w-]+):)?href[^>]*>([\s\S]*?)<\/(?:(?:[\w-]+):)?href>/i);
     return match && toUrl(decodeXml(match[1].trim()));
