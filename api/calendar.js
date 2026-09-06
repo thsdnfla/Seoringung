@@ -96,9 +96,21 @@ function parseEvents(ical) {
 }
 
 async function eventsBetween(startDate, endDate) {
-  const query = `<?xml version="1.0"?><c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav"><d:prop><c:calendar-data/></d:prop><c:filter><c:comp-filter name="VCALENDAR"><c:comp-filter name="VEVENT"><c:time-range start="${xml(toUtcRangeValue(startDate))}" end="${xml(toUtcRangeValue(endDate, true))}"/></c:comp-filter></c:comp-filter></c:comp-filter></c:filter></c:calendar-query>`;
+  // 네이버 CalDAV는 calendar-query에서 일정 본문을 함께 요청하면 400을 반환한다.
+  // 먼저 일정 URL만 구한 뒤 calendar-multiget으로 본문을 가져온다.
+  const rangeQuery = `<C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"><D:prop xmlns:D="DAV:"><D:getetag/></D:prop><C:filter><C:comp-filter name="VCALENDAR"><C:comp-filter name="VEVENT"><C:time-range start="${xml(toUtcRangeValue(startDate))}" end="${xml(toUtcRangeValue(endDate, true))}"/></C:comp-filter></C:comp-filter></C:filter></C:calendar-query>`;
   const urls = await findCalendarUrls();
-  const results = await Promise.all(urls.map(async (url) => calendarDataFrom(await caldavRequest(url, 'REPORT', 1, query, '일정 확인'))));
+  const results = await Promise.all(urls.map(async (url) => {
+    const rangeXml = await caldavRequest(url, 'REPORT', 1, rangeQuery, '일정 범위 확인');
+    const eventHrefs = responsesFrom(rangeXml).map((entry) => {
+      const match = entry.match(/<(?:(?:[\w-]+):)?href[^>]*>([\s\S]*?)<\/(?:(?:[\w-]+):)?href>/i);
+      return match && decodeXml(match[1].trim());
+    }).filter((href) => href && /\.ics$/i.test(href));
+    if (!eventHrefs.length) return [];
+    const hrefList = eventHrefs.map((href) => `<D:href xmlns:D="DAV:">${xml(href)}</D:href>`).join('');
+    const dataQuery = `<C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"><D:prop xmlns:D="DAV:"><D:getetag/><C:calendar-data><C:comp name="VCALENDAR"><C:prop name="VERSION"/><C:comp name="VEVENT"><C:prop name="SUMMARY"/><C:prop name="DTSTART"/><C:prop name="DTEND"/></C:comp></C:comp></C:calendar-data></D:prop>${hrefList}</C:calendar-multiget>`;
+    return calendarDataFrom(await caldavRequest(url, 'REPORT', 1, dataQuery, '일정 내용 확인'));
+  }));
   return results.flatMap((calendars) => calendars.flatMap(parseEvents));
 }
 
