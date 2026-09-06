@@ -1,5 +1,5 @@
 const CALDAV_ORIGIN = 'https://caldav.calendar.naver.com';
-const CALDAV_ROOT = `${CALDAV_ORIGIN}/`;
+const CALDAV_ROOT = `${CALDAV_ORIGIN}/principals/`;
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 function requireCalDavConfig() {
@@ -35,33 +35,32 @@ function toUrl(href) {
   return new URL(href, CALDAV_ROOT).toString();
 }
 
-async function caldavRequest(url, method, depth, body) {
+async function caldavRequest(url, method, depth, body, operation) {
   const { NAVER_CALDAV_USERNAME, NAVER_CALDAV_PASSWORD } = requireCalDavConfig();
   const response = await fetch(url, {
     method,
     headers: {
       Authorization: `Basic ${Buffer.from(`${NAVER_CALDAV_USERNAME}:${NAVER_CALDAV_PASSWORD}`).toString('base64')}`,
       Depth: String(depth),
-      'Content-Type': 'application/xml; charset=utf-8',
     },
-    body,
+    // 네이버 CalDAV 레퍼런스 구현처럼 요청 본문에 Content-Type을 붙이지 않는다.
+    body: Buffer.from(body, 'utf8'),
   });
   const text = await response.text();
-  if (!response.ok && response.status !== 207) throw new Error(`네이버 캘린더 조회에 실패했습니다. (${response.status})`);
+  if (!response.ok && response.status !== 207) throw new Error(`네이버 캘린더 ${operation}에 실패했습니다. (${response.status})`);
   return text;
 }
 
 async function findCalendarUrls() {
   if (process.env.NAVER_CALDAV_CALENDAR_URL) return [process.env.NAVER_CALDAV_CALENDAR_URL];
-  // 네이버는 계정별 principal 경로에서 실제 캘린더 보관함 URL을 반환한다.
-  // 캘린더 ID를 추측해서 URL을 만들면 404가 난다.
-  const { NAVER_CALDAV_USERNAME } = requireCalDavConfig();
-  const principalUrl = `${CALDAV_ORIGIN}/principals/${encodeURIComponent(NAVER_CALDAV_USERNAME)}/`;
-  const principalXml = await caldavRequest(principalUrl, 'PROPFIND', 0, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav"><d:prop><c:calendar-home-set/></d:prop></d:propfind>');
-  const home = hrefsFrom(principalXml, 'calendar-home-set')[0];
+  const principalXml = await caldavRequest(CALDAV_ROOT, 'PROPFIND', 0, '<D:propfind xmlns:D="DAV:"><D:prop><D:current-user-principal/></D:prop></D:propfind>', '계정 확인');
+  const principal = hrefsFrom(principalXml, 'current-user-principal')[0];
+  if (!principal) throw new Error('네이버 캘린더 계정을 찾을 수 없습니다.');
+  const homeXml = await caldavRequest(toUrl(principal), 'PROPFIND', 0, '<?xml version="1.0" encoding="utf-8"?><ns0:propfind xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:ns0="DAV:"><ns0:prop><C:calendar-home-set/></ns0:prop></ns0:propfind>', '보관함 확인');
+  const home = hrefsFrom(homeXml, 'calendar-home-set')[0];
   if (!home) throw new Error('네이버 캘린더 보관함을 찾을 수 없습니다.');
   const homeUrl = toUrl(home);
-  const calendarsXml = await caldavRequest(homeUrl, 'PROPFIND', 1, '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>');
+  const calendarsXml = await caldavRequest(homeUrl, 'PROPFIND', 1, '<?xml version="1.0" encoding="utf-8"?><ns0:propfind xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:ns0="DAV:" xmlns:cs="http://calendarserver.org/ns/"><ns0:prop><ns0:resourcetype/><ns0:displayname/><cs:getctag/></ns0:prop></ns0:propfind>', '캘린더 목록 확인');
   return responsesFrom(calendarsXml).filter((entry) => /<(?:[\w-]+:)?calendar\b/i.test(entry)).map((entry) => {
     const match = entry.match(/<(?:(?:[\w-]+):)?href[^>]*>([\s\S]*?)<\/(?:(?:[\w-]+):)?href>/i);
     return match && toUrl(decodeXml(match[1].trim()));
@@ -99,7 +98,7 @@ function parseEvents(ical) {
 async function eventsBetween(startDate, endDate) {
   const query = `<?xml version="1.0"?><c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav"><d:prop><c:calendar-data/></d:prop><c:filter><c:comp-filter name="VCALENDAR"><c:comp-filter name="VEVENT"><c:time-range start="${xml(toUtcRangeValue(startDate))}" end="${xml(toUtcRangeValue(endDate, true))}"/></c:comp-filter></c:comp-filter></c:comp-filter></c:filter></c:calendar-query>`;
   const urls = await findCalendarUrls();
-  const results = await Promise.all(urls.map(async (url) => calendarDataFrom(await caldavRequest(url, 'REPORT', 1, query))));
+  const results = await Promise.all(urls.map(async (url) => calendarDataFrom(await caldavRequest(url, 'REPORT', 1, query, '일정 확인'))));
   return results.flatMap((calendars) => calendars.flatMap(parseEvents));
 }
 
