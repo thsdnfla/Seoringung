@@ -39,7 +39,7 @@ module.exports = async function handler(request, response) {
   if (![type, date, time, bookerName, bookerPhone, visitorName, visitorPhone].every(Boolean) || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:00$/.test(time)) return response.status(400).json({ error: '예약 정보가 올바르지 않습니다.' });
   try {
     const token = await getAccessToken();
-    const body = new URLSearchParams({ calendarId: 'defaultCalendarId', scheduleIcalString: makeIcal({ type, date, time, bookerName, bookerPhone, visitorName, visitorPhone, message }) });
+    const body = new URLSearchParams({ calendarId: 'ce5beee409751d5330b4ec86eb15dc38', scheduleIcalString: makeIcal({ type, date, time, bookerName, bookerPhone, visitorName, visitorPhone, message }) });
     const calendarResponse = await fetch('https://openapi.naver.com/calendar/createSchedule.json', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body });
     const result = await calendarResponse.json();
     if (!calendarResponse.ok || result.result !== 'success') throw new Error('네이버 캘린더에 일정을 추가하지 못했습니다.');
