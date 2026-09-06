@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { blockedSlotsBetween } = require('./calendar');
 
 const required = ['NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET', 'NAVER_ADMIN_REFRESH_TOKEN'];
 const escapeIcal = (value = '') => String(value).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
@@ -27,7 +28,7 @@ function makeIcal({ type, date, time, bookerName, bookerPhone, visitorName, visi
     'BEGIN:VTIMEZONE', 'TZID:Asia/Seoul', 'BEGIN:STANDARD', 'DTSTART:19700101T000000', 'TZNAME:GMT+09:00', 'TZOFFSETFROM:+0900', 'TZOFFSETTO:+0900', 'END:STANDARD', 'END:VTIMEZONE',
     'BEGIN:VEVENT', `UID:${crypto.randomUUID()}@seoringung`, 'SEQUENCE:0', 'CLASS:PRIVATE', 'TRANSP:OPAQUE',
     `DTSTART;TZID=Asia/Seoul:${compactDate(date, time)}`, `DTEND;TZID=Asia/Seoul:${compactDate(date, endTime)}`,
-    `SUMMARY:${escapeIcal(`서린궁 ${type}`)}`, `DESCRIPTION:${escapeIcal(description)}`, `LOCATION:${escapeIcal('인천 부평구 장제로 249번길 10-2, 201호')}`,
+    `SUMMARY:${escapeIcal(`상담 일정 · 서린궁 ${type}`)}`, `DESCRIPTION:${escapeIcal(description)}`, `LOCATION:${escapeIcal('인천 부평구 장제로 249번길 10-2, 201호')}`,
     `CREATED:${now}`, `LAST-MODIFIED:${now}`, `DTSTAMP:${now}`, 'END:VEVENT', 'END:VCALENDAR',
   ].join('\n');
 }
@@ -38,6 +39,8 @@ module.exports = async function handler(request, response) {
   const { type, date, time, bookerName, bookerPhone, visitorName, visitorPhone, message = '' } = request.body || {};
   if (![type, date, time, bookerName, bookerPhone, visitorName, visitorPhone].every(Boolean) || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:00$/.test(time)) return response.status(400).json({ error: '예약 정보가 올바르지 않습니다.' });
   try {
+    const blocked = await blockedSlotsBetween(date, date);
+    if ((blocked[date] || []).includes(time)) return response.status(409).json({ error: '이미 예약된 시간입니다. 다른 시간을 선택해 주세요.' });
     const token = await getAccessToken();
     const body = new URLSearchParams({ calendarId: 'defaultCalendarId', scheduleIcalString: makeIcal({ type, date, time, bookerName, bookerPhone, visitorName, visitorPhone, message }) });
     const calendarResponse = await fetch('https://openapi.naver.com/calendar/createSchedule.json', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body });
