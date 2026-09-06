@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="서린궁 상담 예약" /><title>서린궁 | 상담 예약</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="booking-page">
+    <header class="booking-header"><a class="brand" href="index.html">서린궁</a><a href="index.html">← 메인으로 돌아가기</a></header>
+    <main class="booking-main">
+      <div class="section-intro"><h1>상담을 예약하세요</h1><p>원하시는 상담 방식과 날짜, 시간을 선택해 주세요.<br />일요일은 정기 휴무입니다.</p></div>
+      <section class="booking-card" aria-label="상담 예약 입력">
+        <div class="booking-step"><span>01</span><div><h3>상담 종류를 선택해 주세요</h3><div class="type-options"><button class="type-option selected" data-type="개인 상담" data-price="100,000원"><span>⌂</span><b>개인 상담</b><small>방문 · 60분 · 100,000원</small></button><button class="type-option" data-type="전화 상담" data-price="100,000원"><span>☎</span><b>전화 상담</b><small>60분 · 100,000원</small></button><button class="type-option" data-type="가족 상담" data-price="150,000원"><span>♧</span><b>가족 상담</b><small>방문 · 4인 기준 · 150,000원</small></button></div></div></div>
+        <div class="booking-step"><span>02</span><div class="date-area"><h3>날짜와 시간을 선택해 주세요</h3><div class="calendar-head"><button id="previous-month" aria-label="이전 달">←</button><strong id="month-label"></strong><button id="next-month" aria-label="다음 달">→</button></div><div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div class="calendar" id="calendar"></div><div class="time-title" id="time-title">날짜를 먼저 선택해 주세요</div><div class="time-slots" id="time-slots"></div></div></div>
+        <div class="booking-step"><span>03</span><form id="booking-form"><h3>예약 정보를 입력해 주세요</h3><p class="form-guide">예약자와 실제 방문(또는 상담)하시는 분의 정보를 각각 입력해 주세요.</p><div class="field-group"><strong>예약자 정보</strong><div class="field-row"><label>예약자 이름<input required name="bookerName" placeholder="예약자 이름" /></label><label>예약자 연락처<input required name="bookerPhone" inputmode="tel" placeholder="010-0000-0000" /></label></div></div><div class="field-group"><strong>방문자 / 상담자 정보</strong><div class="field-row"><label>이름<input required name="visitorName" placeholder="방문자 또는 상담자 이름" /></label><label>연락처<input required name="visitorPhone" inputmode="tel" placeholder="010-0000-0000" /></label></div></div><label>남기실 말씀 <textarea name="message" placeholder="상담에서 나누고 싶은 이야기를 간단히 적어 주세요. (선택)"></textarea></label><label class="consent"><input required type="checkbox" name="privacy" /><span><b>[필수] 개인정보 수집·이용 및 제공에 동의합니다.</b><small>예약 확인 및 상담 안내를 위해 예약자·방문자의 이름, 연락처를 수집하며 예약 처리 목적 달성 후 지체 없이 파기합니다. 동의하지 않으면 예약이 어렵습니다.</small></span></label><p class="selection-summary" id="selection-summary">상담 종류와 시간을 선택해 주세요.</p><button class="submit-button" type="submit">예약 요청하기</button></form></div>
+      </section>
+    </main>
+    <dialog id="success-dialog"><div class="success"><span>✦</span><h2>예약 요청을 받았습니다</h2><p id="success-copy"></p><button class="submit-button" id="close-success">확인</button></div></dialog>
+    <script src="app.js"></script>
+  </body>
+</html>

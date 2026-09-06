@@ -3,71 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="부평점집 서린궁 전화·방문 상담 예약" />
-    <title>부평점집 서린궁 | 상담 예약</title>
+    <meta name="description" content="서린궁 상담 안내 및 예약" />
+    <title>서린궁 | 상담 예약</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="home-page">
     <header class="site-header">
-      <a class="brand" href="#top"><span>부평점집</span> 서린궁</a>
-      <nav aria-label="주요 메뉴"><a href="#reservation">예약하기</a><a href="#reviews">상담후기</a><a href="#contact">오시는 길</a></nav>
-      <a class="header-cta" href="#reservation">예약하기</a>
+      <a class="brand" href="#top">서린궁</a>
+      <nav aria-label="주요 메뉴"><a href="#about">소개</a><a href="#gallery">공간과 순간</a><a href="#contact">오시는 길</a></nav>
+      <a class="header-cta" href="booking.html" target="_blank" rel="noopener">상담 예약하기</a>
     </header>
-
     <main id="top">
       <section class="hero">
-        <div class="moon moon-one"></div><div class="moon moon-two"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">BUPYEONG · SPIRITUAL GUIDANCE</p>
-          <h1>마음에 답이<br /><em>필요한 순간</em></h1>
-          <p class="hero-text">망설이던 이야기, 서린궁에서 편안히 나누세요.<br />전화와 방문 상담을 예약하실 수 있습니다.</p>
-          <a class="primary-button" href="#reservation">상담 예약하기 <span>↗</span></a>
-        </div>
-        <div class="hero-note"><span></span> CONSULTATION BY RESERVATION</div>
+        <div class="dancheong dancheong-one"></div>
+        <div class="hero-copy"><h1>신의 말씀을 올바른 공수로<br /><em>전달하는 옳은 무당</em></h1><p class="hero-text">마음을 다해 듣고, 바른 마음으로 답합니다.<br />서린궁에서 편안히 이야기를 나누세요.</p><a class="primary-button" href="booking.html" target="_blank" rel="noopener">상담 예약하기 <span>↗</span></a></div>
       </section>
-
-      <section class="info-strip" aria-label="상담 정보">
-        <div><b>01</b><span>개인 상담</span></div><div><b>02</b><span>전화 상담</span></div><div><b>60</b><span>분 상담</span></div><div><b>10—19</b><span>상담 시간</span></div>
+      <section class="introduction traditional-intro" id="about">
+        <div class="intro-image"><img src="assets/ritual-outdoor.jpg" alt="야외에서 전통 의식을 진행하는 모습" /></div>
+        <div class="intro-copy"><h2>정성을 다해,<br />당신의 이야기에 귀 기울입니다.</h2><p>삶의 갈림길에서 마음을 정돈하고 싶은 순간, 서린궁은 진심을 담아 함께합니다. 신의 말씀을 올바르게 전하고자 하는 마음으로 한 분 한 분의 사연을 경청합니다.</p><p>상담은 사전 예약제로, 전화 또는 방문 상담으로 진행됩니다.</p><a class="text-link" href="booking.html" target="_blank" rel="noopener">상담 예약 창 열기 <span>→</span></a></div>
       </section>
-
-      <section class="introduction" id="introduction">
-        <div class="intro-image"><img src="candle.png" alt="서린궁 촛불" /></div>
-        <div class="intro-copy"><p class="eyebrow dark">ABOUT SEORIN GUNG</p><h2>한 줄기 빛처럼,<br />마음의 길을 함께 봅니다.</h2><p>복잡한 마음과 쉽게 꺼내기 어려운 고민을 편안히 이야기할 수 있는 자리를 만듭니다. 서린궁은 한 분 한 분의 사연을 경청하며, 앞으로의 방향을 함께 찾습니다.</p><p>상담은 사전 예약제로 진행되며, 전화와 방문 모두 가능합니다.</p><img src="contact-card.png" alt="서린궁 연락처와 주소 안내" /></div>
-        <img class="shrine-image" src="shrine.png" alt="서린궁 신당" />
+      <section class="gallery-section" id="gallery">
+        <div class="gallery-heading"><h2>정성과 기도가 머무는 순간</h2><p>서린궁의 공간과 의식의 모습을 소개합니다.</p></div>
+        <div class="photo-gallery"><figure class="photo-large"><img src="assets/ritual-dance.jpg" alt="신당에서 전통 의식을 진행하는 모습" /><figcaption>마음을 다해 올리는 기도</figcaption></figure><figure><img src="assets/ritual-altar.jpg" alt="제물과 촛불이 놓인 기도 공간" /><figcaption>정성으로 마련한 자리</figcaption></figure><figure><img src="assets/shrine-hall.jpg" alt="정갈하게 꾸며진 서린궁 신당" /><figcaption>서린궁의 신당</figcaption></figure><figure class="photo-wide"><img src="assets/moon-sea.jpg" alt="달빛이 비치는 바다와 소나무" /><figcaption>고요히 마음을 비추는 달빛</figcaption></figure></div>
       </section>
-
-      <section class="reservation-section" id="reservation">
-        <div class="section-intro">
-          <p class="eyebrow dark">RESERVATION</p>
-          <h2>상담을 예약하세요</h2>
-          <p>원하시는 방식과 시간을 고르면 예약이 완료됩니다.<br />일요일은 정기 휴무입니다.</p>
-          <aside><strong>상담 시간</strong><br />월요일–토요일 · 오전 10:00–오후 7:00<br />상담 시간은 60분입니다.</aside>
-        </div>
-        <div class="booking-card">
-          <div class="booking-step"><span>01</span><div><h3>상담 종류를 선택해 주세요</h3><div class="type-options"><button class="type-option selected" data-type="개인 상담" data-price="100,000원"><span>⌂</span><b>개인 상담</b><small>방문 · 60분 · 100,000원</small></button><button class="type-option" data-type="전화 상담" data-price="100,000원"><span>☎</span><b>전화 상담</b><small>60분 · 100,000원</small></button><button class="type-option" data-type="가족 상담" data-price="150,000원"><span>♧</span><b>가족 상담</b><small>방문 · 4인 기준 · 150,000원</small></button></div></div></div>
-          <div class="booking-step"><span>02</span><div class="date-area"><h3>날짜와 시간을 선택해 주세요</h3><div class="calendar-head"><button id="previous-month" aria-label="이전 달">←</button><strong id="month-label"></strong><button id="next-month" aria-label="다음 달">→</button></div><div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div class="calendar" id="calendar"></div><div class="time-title" id="time-title">날짜를 먼저 선택해 주세요</div><div class="time-slots" id="time-slots"></div></div></div>
-          <div class="booking-step"><span>03</span><form id="booking-form"><h3>예약 정보를 입력해 주세요</h3><p class="form-guide">예약자와 실제 방문(또는 상담)하시는 분의 정보를 각각 입력해 주세요.</p><div class="field-group"><strong>예약자 정보</strong><div class="field-row"><label>예약자 이름<input required name="bookerName" placeholder="예약자 이름" /></label><label>예약자 연락처<input required name="bookerPhone" inputmode="tel" placeholder="010-0000-0000" /></label></div></div><div class="field-group"><strong>방문자 / 상담자 정보</strong><div class="field-row"><label>이름<input required name="visitorName" placeholder="방문자 또는 상담자 이름" /></label><label>연락처<input required name="visitorPhone" inputmode="tel" placeholder="010-0000-0000" /></label></div></div><label>남기실 말씀 <textarea name="message" placeholder="상담에서 나누고 싶은 이야기를 간단히 적어 주세요. (선택)"></textarea></label><label class="consent"><input required type="checkbox" name="privacy" /><span><b>[필수] 개인정보 수집·이용 및 제공에 동의합니다.</b><small>예약 확인 및 상담 안내를 위해 예약자·방문자의 이름, 연락처를 수집하며 예약 처리 목적 달성 후 지체 없이 파기합니다. 동의하지 않으면 예약이 어렵습니다.</small></span></label><p class="selection-summary" id="selection-summary">상담 종류와 시간을 선택해 주세요.</p><button class="submit-button" type="submit">예약 요청하기</button></form></div>
-        </div>
-      </section>
-
-      <section class="reviews-section" id="reviews">
-        <div class="reviews-heading"><div><p class="eyebrow">CLIENT REVIEWS</p><h2>상담 후기</h2><p>상담을 마친 분들의 솔직한 이야기입니다.</p></div><button class="outline-button" id="open-review">후기 남기기</button></div>
-        <div class="review-grid" id="review-grid">
-          <article class="review-card"><div>★★★★★ <time>2026.08</time></div><p>복잡했던 마음을 차분하게 정리할 수 있었어요. 따뜻하게 들어주셔서 감사합니다.</p><small>익명</small></article>
-          <article class="review-card"><div>★★★★★ <time>2026.08</time></div><p>현실적인 조언이 큰 도움이 됐습니다. 다음에 또 고민이 생기면 찾고 싶어요.</p><small>익명</small></article>
-          <article class="review-card"><div>★★★★★ <time>2026.07</time></div><p>처음이라 긴장했는데 편하게 이끌어 주셔서 마음속 이야기를 잘 나눌 수 있었습니다.</p><small>익명</small></article>
-        </div>
-      </section>
-
-      <section class="contact" id="contact"><p class="eyebrow">CONTACT & RESERVATION</p><h2>서린궁과 상담을 시작하세요</h2><p>예약 문의는 전화로도 가능합니다.</p><a href="tel:01083474727">010 · 8347 · 4727</a><small>인천 부평구 장제로 249번길 10-2, 201호 · 예약 후 방문 부탁드립니다.</small></section>
+      <section class="contact" id="contact"><h2>서린궁과 상담을 시작하세요</h2><p>상담 예약은 아래 버튼 또는 전화로 문의해 주세요.</p><a class="contact-booking" href="booking.html" target="_blank" rel="noopener">상담 예약하기</a><a href="tel:01083474727">010 · 8347 · 4727</a><a class="map-link" href="https://map.naver.com/p/search/%EC%9D%B8%EC%B2%9C%20%EB%B6%80%ED%8F%89%EA%B5%AC%20%EC%9E%A5%EC%A0%9C%EB%A1%9C%20249%EB%B2%88%EA%B8%B8%2010-2" target="_blank" rel="noopener">네이버 지도에서 오시는 길 보기</a><small>인천 부평구 장제로 249번길 10-2, 201호 · 예약 후 방문 부탁드립니다.</small></section>
     </main>
-    <a class="mobile-cta" href="#reservation">상담 예약하기</a>
-
-    <dialog id="review-dialog"><form method="dialog" id="review-form"><button class="close" value="cancel" aria-label="닫기">×</button><p class="eyebrow dark">WRITE A REVIEW</p><h2>상담 후기 남기기</h2><label>별점<select name="rating"><option value="★★★★★">★★★★★</option><option value="★★★★☆">★★★★☆</option><option value="★★★☆☆">★★★☆☆</option></select></label><label>후기<textarea name="content" required placeholder="상담 후기를 남겨 주세요."></textarea></label><label>이름 또는 닉네임<input name="author" placeholder="익명" /></label><button class="submit-button" value="submit">등록하기</button></form></dialog>
-    <dialog id="success-dialog"><div class="success"><span>✦</span><h2>예약 요청을 받았습니다</h2><p id="success-copy"></p><button class="submit-button" id="close-success">확인</button></div></dialog>
-    <script src="app.js"></script>
+    <a class="mobile-cta" href="booking.html" target="_blank" rel="noopener">상담 예약하기</a>
   </body>
 </html>
