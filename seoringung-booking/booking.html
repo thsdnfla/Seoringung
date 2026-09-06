@@ -4,12 +4,12 @@
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="서린궁 상담 예약" /><title>서린궁 | 상담 예약</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" /><link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="booking.css" />
   </head>
   <body class="booking-page">
     <header class="booking-header"><a class="brand" href="index.html">서린궁</a><a href="index.html">← 메인으로 돌아가기</a></header>
     <main class="booking-main">
-      <div class="section-intro"><h1>상담을 예약하세요</h1><p>원하시는 상담 방식과 날짜, 시간을 선택해 주세요.<br />일요일은 정기 휴무입니다.</p></div>
+      <div class="section-intro"><h1>상담을 예약하세요</h1><p>원하시는 상담 방식과 날짜, 시간을 선택해 주세요.<br />일요일은 정기 휴무입니다.</p><aside class="deposit-notice"><strong>점사비 선납 후에 예약 완료됩니다</strong><span>계좌: 토스뱅크 1002-5968-1870 서린궁</span></aside></div>
       <section class="booking-card" aria-label="상담 예약 입력">
         <div class="booking-step"><span>01</span><div><h3>상담 종류를 선택해 주세요</h3><div class="type-options"><button class="type-option selected" data-type="개인 상담" data-price="100,000원"><span>⌂</span><b>개인 상담</b><small>방문 · 60분 · 100,000원</small></button><button class="type-option" data-type="전화 상담" data-price="100,000원"><span>☎</span><b>전화 상담</b><small>60분 · 100,000원</small></button><button class="type-option" data-type="가족 상담" data-price="150,000원"><span>♧</span><b>가족 상담</b><small>방문 · 4인 기준 · 150,000원</small></button></div></div></div>
         <div class="booking-step"><span>02</span><div class="date-area"><h3>날짜와 시간을 선택해 주세요</h3><div class="calendar-head"><button id="previous-month" aria-label="이전 달">←</button><strong id="month-label"></strong><button id="next-month" aria-label="다음 달">→</button></div><div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div class="calendar" id="calendar"></div><div class="time-title" id="time-title">날짜를 먼저 선택해 주세요</div><div class="time-slots" id="time-slots"></div></div></div>
